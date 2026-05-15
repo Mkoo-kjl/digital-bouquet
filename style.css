@@ -12,9 +12,9 @@
   --deep:   #7a3347;
   --gold:   #c9a96e;
   --leaf:   #7a9e7e;
-  --petal1: #f7a8b8;
-  --petal2: #f9d0d8;
-  --petal3: #e88fa1;
+  --petal1: #ffd1dc;
+  --petal2: #ffb6c1;
+  --petal3: #fce4ec;
 }
 
 html, body {
@@ -38,28 +38,67 @@ html, body {
     var(--cream);
 }
 
+/* ── ORGANIC FALLING PETALS ── */
 .petal-bg {
-  position: fixed;
+ position: fixed;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  z-index: 0;
+  z-index: 1; /* This brings it above the background colors */
 }
 
 .fp {
-  position: absolute;
+position: absolute;
   width: 12px;
   height: 18px;
   border-radius: 60% 40% 60% 40%;
   opacity: 0;
+  top: -20px; /* Start above the screen */
   animation: floatPetal linear infinite;
 }
 
+/* Varied aesthetic petal shapes */
+.fp.shape1 {
+  width: 14px;
+  height: 22px;
+  border-radius: 15px 50px 15px 50px;
+}
+.fp.shape2 {
+  width: 18px;
+  height: 20px;
+  border-radius: 50px 15px 50px 15px;
+  background: linear-gradient(135deg, var(--petal3) 0%, var(--petal2) 100%);
+}
+.fp.shape3 {
+  width: 15px;
+  height: 24px;
+  border-radius: 50% 50% 0 50%;
+}
+.fp.shape4 {
+  width: 12px;
+  height: 18px;
+  border-radius: 50% 0 50% 50%;
+  background: linear-gradient(135deg, #fff0f5 0%, var(--petal1) 100%);
+}
+
 @keyframes floatPetal {
-  0%   { transform: translateY(-20px) rotate(0deg);   opacity: 0; }
-  10%  { opacity: .4; }
-  90%  { opacity: .3; }
-  100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+  0% { 
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(0.8); 
+    opacity: 0; 
+  }
+  15% { 
+    opacity: 0.8; 
+  }
+  50% {
+    transform: translate3d(20px, 50vh, 0) rotate(180deg) scale(1);
+  }
+  85% { 
+    opacity: 0.6; 
+  }
+  100% { 
+    transform: translate3d(-20px, 110vh, 0) rotate(360deg) scale(0.8); 
+    opacity: 0; 
+  }
 }
 
 .subtitle {
@@ -101,20 +140,13 @@ h1 em {
 #bouquet-canvas {
   width: 100%;
   height: 100%;
-  /* Increased shadow spread and used a pinker hue to enhance the glowing effect */
-  filter: drop-shadow(0 0px 45px rgba(255, 77, 143, 0.45));
-  transition: transform .4s ease;
+  filter: drop-shadow(0 0px 45px rgba(255, 77, 143, 0.25));
+  transition: transform .5s cubic-bezier(0.25, 1, 0.5, 1), filter .5s ease;
 }
 
 #bouquet-wrap:hover #bouquet-canvas {
-  transform: scale(1.04) translateY(-8px);
-  /* Make the glow brighter when hovering over the bouquet */
-  filter: drop-shadow(0 0px 60px rgba(255, 77, 143, 0.65));
-}
-
-@keyframes sway {
-  from { transform: rotate(-2.5deg); }
-  to   { transform: rotate( 2.5deg); }
+  transform: scale(1.05) translateY(-10px);
+  filter: drop-shadow(0 15px 50px rgba(255, 77, 143, 0.45));
 }
 
 .tap-hint {
@@ -133,8 +165,8 @@ h1 em {
   50%       { opacity: 1; }
 }
 
-/* ── LETTER OVERLAY ── */
-#letter-overlay {
+/* ── OVERLAYS (Letter & Photo) ── */
+#letter-overlay, #photo-overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -147,7 +179,7 @@ h1 em {
   animation: overlayIn .4s ease;
 }
 
-#letter-overlay.open { display: flex; }
+#letter-overlay.open, #photo-overlay.open { display: flex; }
 
 @keyframes overlayIn {
   from { opacity: 0; }
@@ -212,23 +244,9 @@ h1 em {
   font-weight: 300;
 }
 
-.letter-body p {
-  margin-bottom: 1.2em;
-  position: relative;
-  z-index: 1;
-}
-
-.letter-body .greeting {
-  font-size: 1.3em;
-  font-style: italic;
-  color: var(--deep);
-}
-
-.letter-body .sign-off {
-  font-style: italic;
-  margin-top: .4em;
-}
-
+.letter-body p { margin-bottom: 1.2em; position: relative; z-index: 1; }
+.letter-body .greeting { font-size: 1.3em; font-style: italic; color: var(--deep); }
+.letter-body .sign-off { font-style: italic; margin-top: .4em; }
 .letter-body .name {
   font-family: 'Libre Baskerville', serif;
   font-style: italic;
@@ -253,10 +271,7 @@ h1 em {
   z-index: 2;
 }
 
-#close-btn:hover {
-  opacity: 1;
-  transform: rotate(15deg);
-}
+#close-btn:hover { opacity: 1; transform: rotate(15deg); }
 
 footer {
   margin-top: 1.2rem;
@@ -286,7 +301,7 @@ footer {
   position: relative;
 }
 
-/* ── POLAROIDS - Medium Big ── */
+/* ── POLAROIDS ── */
 .polaroid-stack {
   display: flex;
   flex-direction: column;
@@ -302,9 +317,7 @@ footer {
 .polaroid {
   background: #fffaf5;
   padding: 12px 12px 38px 12px;
-  box-shadow:
-    0 6px 20px rgba(122,51,71,.18),
-    0 2px 6px rgba(0,0,0,.08);
+  box-shadow: 0 6px 20px rgba(122,51,71,.18), 0 2px 6px rgba(0,0,0,.08);
   width: 175px;
   transform: rotate(var(--r, 0deg)) translate(var(--tx, 0), var(--ty, 0));
   transition: transform .3s ease, box-shadow .3s ease;
@@ -315,9 +328,7 @@ footer {
 
 .polaroid:hover {
   transform: rotate(0deg) translate(0, -8px) scale(1.08);
-  box-shadow:
-    0 20px 50px rgba(122,51,71,.32),
-    0 4px 12px rgba(0,0,0,.1);
+  box-shadow: 0 20px 50px rgba(122,51,71,.32), 0 4px 12px rgba(0,0,0,.1);
   z-index: 10;
 }
 
@@ -362,30 +373,14 @@ footer {
 }
 
 /* ── PHOTO LIGHTBOX ── */
-#photo-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background: rgba(40, 8, 18, .82);
-  backdrop-filter: blur(10px);
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  animation: overlayIn .3s ease;
-}
-
-#photo-overlay.open { display: flex; }
-
+#photo-overlay { z-index: 200; background: rgba(40, 8, 18, .82); }
 #photo-lightbox {
   position: relative;
   max-width: min(90vw, 560px);
   max-height: 85vh;
   background: #fffaf5;
   padding: 14px 14px 52px 14px;
-  box-shadow:
-    0 40px 100px rgba(80, 20, 40, .5),
-    0 8px 24px rgba(0,0,0,.2);
+  box-shadow: 0 40px 100px rgba(80, 20, 40, .5), 0 8px 24px rgba(0,0,0,.2);
   border: 1px solid rgba(201,169,110,.25);
   animation: cardIn .35s ease both;
 }
@@ -417,10 +412,7 @@ footer {
   justify-content: center;
 }
 
-#photo-close-btn:hover {
-  background: rgba(255,250,246,.25);
-  transform: rotate(15deg);
-}
+#photo-close-btn:hover { background: rgba(255,250,246,.25); transform: rotate(15deg); }
 
 /* ── ENTRY SCREEN ── */
 #entry-screen {
@@ -446,26 +438,10 @@ footer {
   z-index: -1;
 }
 
-.screen-half.left {
-  left: 0;
-  justify-content: flex-end;
-  border-right: 1px solid rgba(212, 119, 138, 0.15);
-}
+.screen-half.left { left: 0; justify-content: flex-end; border-right: 1px solid rgba(212, 119, 138, 0.15); }
+.screen-half.right { right: 0; justify-content: flex-start; }
 
-.screen-half.right {
-  right: 0;
-  justify-content: flex-start;
-}
-
-/* ── BLOOM PORTAL (replaces heart) ── */
-.entry-portal {
-  cursor: pointer;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+.entry-portal { cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; }
 .bloom-container {
   position: relative;
   width: 160px;
@@ -485,15 +461,8 @@ footer {
   opacity: 0.5;
 }
 
-.bloom-svg {
-  width: 140px;
-  height: 140px;
-  filter: drop-shadow(0 0 15px rgba(244, 143, 177, 0.4));
-}
-
-.bloom-petal {
-  animation: bloomPetalPulse 3s ease-in-out infinite;
-}
+.bloom-svg { width: 140px; height: 140px; filter: drop-shadow(0 0 15px rgba(244, 143, 177, 0.4)); }
+.bloom-petal { animation: bloomPetalPulse 3s ease-in-out infinite; }
 
 @keyframes bloomBreathe {
   0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--petal1)); }
@@ -515,46 +484,20 @@ footer {
   animation: pulse 2.5s ease-in-out infinite;
 }
 
-/* ── REVEAL STATE ── */
 .reveal-active .screen-half.left { transform: translateX(-100%); }
 .reveal-active .screen-half.right { transform: translateX(100%); }
-.reveal-active .entry-portal {
-  transform: scale(0.6);
-  opacity: 0;
-  transition: transform 0.5s ease-in, opacity 0.4s;
-}
+.reveal-active .entry-portal { transform: scale(0.6); opacity: 0; transition: transform 0.5s ease-in, opacity 0.4s; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
-  #center-stage {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .polaroid-stack {
-    flex-direction: row;
-    justify-content: center;
-    margin: 0;
-    gap: .6rem;
-  }
-  .left-stack, .right-stack {
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .polaroid {
-    width: 120px;
-    padding: 8px 8px 30px 8px;
-  }
-  #bouquet-wrap {
-    width: min(400px, 90vw);
-    height: min(430px, 95vw);
-    margin: 0 auto;
-  }
-  .subtitle {
-    font-size: 28px;
-    letter-spacing: .2em;
-  }
+  #center-stage { flex-direction: column; gap: 1rem; }
+  .polaroid-stack { flex-direction: row; justify-content: center; margin: 0; gap: .6rem; }
+  .left-stack, .right-stack { margin-left: 0; margin-right: 0; }
+  .polaroid { width: 120px; padding: 8px 8px 30px 8px; }
+  #bouquet-wrap { width: min(400px, 90vw); height: min(430px, 95vw); margin: 0 auto; }
+  .subtitle { font-size: 28px; letter-spacing: .2em; }
 }
 
 /* ── CUSTOM SCROLLBAR ── */
-#letter-card::-webkit-scrollbar       { width: 4px; }
+#letter-card::-webkit-scrollbar { width: 4px; }
 #letter-card::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 4px; }
